@@ -24,7 +24,7 @@ func NewCommentHandler(commentService service.CommentService) *CommentHandler {
 }
 
 func (h *CommentHandler) CreateComment(c *gin.Context) {
-	postID, err := strconv.ParseUint(c.Param("postId"), 10, 64)
+	postID, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
 		response.Error(c, http.StatusBadRequest, "invalid post id")
 		return
@@ -53,7 +53,7 @@ func (h *CommentHandler) CreateComment(c *gin.Context) {
 }
 
 func (h *CommentHandler) ListComments(c *gin.Context) {
-	postID, err := strconv.ParseUint(c.Param("postId"), 10, 64)
+	postID, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
 		response.Error(c, http.StatusBadRequest, "invalid post id")
 		return

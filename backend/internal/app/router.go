@@ -36,7 +36,7 @@ func NewRouter(ctx context.Context) (*gin.Engine, *Container, error) {
 
 		api.GET("/posts/:id", container.PostHandler.GetPostByID)
 		api.GET("/posts", container.PostHandler.ListPosts)
-		api.GET("/posts/:postId/comments", container.CommentHandler.ListComments)
+		api.GET("/posts/:id/comments", container.CommentHandler.ListComments)
 		api.POST("/ide/cpp/run", container.CPPIdeHandler.RunCPP)
 
 		protected := api.Group("")
@@ -49,7 +49,7 @@ func NewRouter(ctx context.Context) (*gin.Engine, *Container, error) {
 			protected.POST("/posts", container.PostHandler.CreatePost)
 			protected.DELETE("/posts/:id", container.PostHandler.DeletePost)
 
-			protected.POST("/posts/:postId/comments", container.CommentHandler.CreateComment)
+			protected.POST("/posts/:id/comments", container.CommentHandler.CreateComment)
 			protected.DELETE("/comments/:commentId", container.CommentHandler.DeleteComment)
 		}
 	}

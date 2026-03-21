@@ -6,7 +6,6 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/lib/pq"
 
 	"easycpp/backend/internal/model"
 )
@@ -45,7 +44,7 @@ func (r *PGPostRepository) Create(ctx context.Context, post *model.Post) error {
 		post.Content,
 		post.Language,
 		post.Difficulty,
-		pq.Array(post.Tags),
+		post.Tags,
 		post.ViewCount,
 		post.LikeCount,
 		post.CommentCount,
@@ -74,7 +73,7 @@ func (r *PGPostRepository) GetByID(ctx context.Context, id uint64) (*model.Post,
 		&post.Content,
 		&post.Language,
 		&post.Difficulty,
-		pq.Array(&post.Tags),
+		&post.Tags,
 		&post.ViewCount,
 		&post.LikeCount,
 		&post.CommentCount,
@@ -121,7 +120,7 @@ func (r *PGPostRepository) List(ctx context.Context, limit, offset int) ([]model
 			&post.Content,
 			&post.Language,
 			&post.Difficulty,
-			pq.Array(&post.Tags),
+			&post.Tags,
 			&post.ViewCount,
 			&post.LikeCount,
 			&post.CommentCount,
