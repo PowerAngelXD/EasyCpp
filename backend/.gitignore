@@ -1,0 +1,19 @@
+# Build output
+bin/
+
+# Go test / coverage
+*.test
+coverage.out
+
+# Env / local config
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Temp
+tmp/
+temp/
