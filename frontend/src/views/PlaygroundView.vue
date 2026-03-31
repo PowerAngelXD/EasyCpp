@@ -3,23 +3,21 @@
 
     import CodeEditor from '../components/CodeEditor.vue'
     import TerminalPanel from '../components/TerminalPanel.vue'
-    import { createCppRunner } from '../utils/cppRunner'
+    import { createJsRunner } from '../utils/jsRunner'
 
-    const languageId = ref('cpp')
+    const languageId = ref('javascript')
 
-    const codeText = ref(`#include <iostream>
-using namespace std;
-
-int main() {
-    cout << "Hello, EasyCpp!" << endl;
-    return 0;
+    const codeText = ref(`function main() {
+    console.log('Hello.')
 }
+
+main()
 `)
 
     const terminalLines = ref([])
     const isRunning = ref(false)
 
-    const cppRunner = createCppRunner({
+    const jsRunner = createJsRunner({
         onLine(line) {
             terminalLines.value = [...terminalLines.value, line]
         },
@@ -41,7 +39,18 @@ int main() {
      * @returns {void}
      */
     function runCode() {
-        cppRunner.run(codeText.value)
+        if (languageId.value === 'javascript') {
+            jsRunner.run(codeText.value)
+            return
+        }
+        terminalLines.value = [
+            ...terminalLines.value,
+            {
+                id: `${Date.now()}-unsupported`,
+                type: 'error',
+                text: 'This prototype only runs JavaScript in-browser. Other languages require backend compilation.',
+            },
+        ]
     }
 
     /**
@@ -49,11 +58,11 @@ int main() {
      * @returns {void}
      */
     function stopRun() {
-        cppRunner.stop()
+        jsRunner.stop()
     }
 
     onBeforeUnmount(() => {
-        cppRunner.stop()
+        jsRunner.stop()
     })
 </script>
 
@@ -62,13 +71,17 @@ int main() {
         <div class="pageHeader">
             <div class="headerLeft">
                 <h1 class="title">Playground</h1>
-                <div class="subtitle">C++ online IDE (compile + run via backend API)</div>
+                <div class="subtitle">Editor + terminal output (prototype)</div>
             </div>
             <div class="headerRight">
-                <div class="selectLabel">
+                <label class="selectLabel">
                     <span class="selectText">Language</span>
-                    <span class="selectValue">C++</span>
-                </div>
+                    <select v-model="languageId" class="select">
+                        <option value="javascript">JavaScript</option>
+                        <option value="cpp">C++ (later)</option>
+                        <option value="python">Python (later)</option>
+                    </select>
+                </label>
 
                 <button class="primaryButton" type="button" :disabled="isRunning" @click="runCode">
                     Run
@@ -140,10 +153,18 @@ int main() {
         color: var(--mutedTextColor);
     }
 
-    .selectValue {
+    .select {
+        border: 0;
+        background: transparent;
         color: var(--textColor);
+        outline: none;
+        font: inherit;
         font-size: 13px;
-        font-weight: 600;
+    }
+
+    .select option {
+        color: black;
+        background: white;
     }
 
     .button,

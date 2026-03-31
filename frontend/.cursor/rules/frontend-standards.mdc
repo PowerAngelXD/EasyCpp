@@ -1,0 +1,47 @@
+---
+description: Frontend code style (Vue/JS), indentation, naming, and comments
+alwaysApply: true
+---
+
+# Frontend Standards (Vue + JS)
+
+## Indentation
+
+- Use **4 spaces** indentation for **all** files, including `.js` and `.vue` (`<template>`, `<script>`, `<style>`).
+- Do not use tabs.
+
+## Naming
+
+- Use **lower camelCase** for variables and functions (e.g. `getElement`).
+- Use clear names; avoid abbreviations unless widely understood in context.
+
+## Variables
+
+- Every variable should have a clear meaning through its name.
+- If the name is **not** self-explanatory, add a short comment to clarify the meaning.
+
+## Functions (JSDoc required)
+
+- Every non-trivial function should include JSDoc documenting:
+  - parameter meanings
+  - return value meaning and type
+
+Example:
+
+```js
+/**
+ * Persist theme preference into storage.
+ * @param {('light'|'dark')} themeName The theme to persist.
+ * @returns {void}
+ */
+export function saveThemePreference(themeName) {
+    // ...
+}
+```
+
+## Comments (only when needed)
+
+- Only add a comment when it explains intent, constraints, or trade-offs that code alone cannot.
+- Before writing a comment, answer:
+  - "If we don't do it this way, what breaks or gets worse?"
+  - "If we do it this way, what becomes better or safer?"

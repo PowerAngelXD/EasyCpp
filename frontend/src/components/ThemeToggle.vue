@@ -31,12 +31,29 @@
 
 <template>
     <button class="themeToggle" type="button" :aria-pressed="isDarkTheme" @click="toggleTheme">
-        <svg v-if="!isDarkTheme" class="themeToggleIcon" role="presentation" aria-hidden="true" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/>
-            <path fill="none" stroke="currentColor" stroke-width="1.5" d="M12 1v3M12 20v3M3.41 3.41l2.83 2.83M17.76 17.76l2.83 2.83M1 12h3M20 12h3M3.41 20.59l2.83-2.83M17.76 6.24l2.83-2.83"/>
+        <svg
+            v-if="!isDarkTheme"
+            class="themeToggleIcon"
+            role="presentation"
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+        >
+            <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.5" />
+            <path
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                d="M12 1v3M12 20v3M3.41 3.41l2.83 2.83M17.76 17.76l2.83 2.83M1 12h3M20 12h3M3.41 20.59l2.83-2.83M17.76 6.24l2.83-2.83"
+            />
         </svg>
-        <svg v-else class="themeToggleIcon" role="presentation" aria-hidden="true" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        <svg
+            v-else
+            class="themeToggleIcon"
+            role="presentation"
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+        >
+            <path fill="currentColor" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
         </svg>
         <span class="themeToggleLabel">{{ isDarkTheme ? 'Dark theme' : 'Light theme' }}</span>
     </button>
