@@ -4,13 +4,13 @@
 
 <template>
     <aside class="sidebar">
-        <div class="sidebarBrand">
+        <RouterLink class="sidebarBrand" to="/profile">
             <div class="brandMark" aria-hidden="true"></div>
             <div class="brandText">
                 <div class="brandTitle">Study</div>
                 <div class="brandSubtitle">Learning Platform</div>
             </div>
-        </div>
+        </RouterLink>
 
         <nav class="nav" aria-label="Primary">
             <RouterLink class="navItem" to="/">
@@ -50,6 +50,8 @@
         gap: 10px;
         padding: 10px 10px;
         border-radius: 10px;
+        text-decoration: none;
+        color: var(--textColor);
     }
 
     .brandMark {
