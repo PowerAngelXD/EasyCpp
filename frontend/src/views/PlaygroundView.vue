@@ -1,18 +1,31 @@
 <script setup>
-    import { onBeforeUnmount, ref } from 'vue'
+    import { onBeforeUnmount, ref, watch } from 'vue'
 
     import CodeEditor from '../components/CodeEditor.vue'
     import TerminalPanel from '../components/TerminalPanel.vue'
+    import { createCppRunner } from '../utils/cppRunner'
     import { createJsRunner } from '../utils/jsRunner'
 
-    const languageId = ref('javascript')
-
-    const codeText = ref(`function main() {
+    const defaultCodeByLanguage = {
+        javascript: `function main() {
     console.log('Hello.')
 }
 
 main()
-`)
+`,
+        cpp: `#include <iostream>
+
+int main() {
+    std::cout << "Hello from C++." << std::endl;
+    return 0;
+}
+`,
+        python: `print('Python support is not connected yet.')`,
+    }
+
+    const languageId = ref('javascript')
+    const codeDrafts = ref({ ...defaultCodeByLanguage })
+    const codeText = ref(codeDrafts.value[languageId.value])
 
     const terminalLines = ref([])
     const isRunning = ref(false)
@@ -24,6 +37,24 @@ main()
         onRunningChange(nextIsRunning) {
             isRunning.value = nextIsRunning
         },
+    })
+
+    const cppRunner = createCppRunner({
+        onLine(line) {
+            terminalLines.value = [...terminalLines.value, line]
+        },
+        onRunningChange(nextIsRunning) {
+            isRunning.value = nextIsRunning
+        },
+    })
+
+    watch(languageId, (nextLanguageId, previousLanguageId) => {
+        codeDrafts.value[previousLanguageId] = codeText.value
+        codeText.value = codeDrafts.value[nextLanguageId] ?? defaultCodeByLanguage[nextLanguageId] ?? ''
+    })
+
+    watch(codeText, (nextCodeText) => {
+        codeDrafts.value[languageId.value] = nextCodeText
     })
 
     /**
@@ -43,6 +74,12 @@ main()
             jsRunner.run(codeText.value)
             return
         }
+
+        if (languageId.value === 'cpp') {
+            cppRunner.run(codeText.value)
+            return
+        }
+
         terminalLines.value = [
             ...terminalLines.value,
             {
@@ -58,11 +95,17 @@ main()
      * @returns {void}
      */
     function stopRun() {
+        if (languageId.value === 'cpp') {
+            cppRunner.stop()
+            return
+        }
+
         jsRunner.stop()
     }
 
     onBeforeUnmount(() => {
         jsRunner.stop()
+        cppRunner.stop()
     })
 </script>
 
@@ -71,14 +114,14 @@ main()
         <div class="pageHeader">
             <div class="headerLeft">
                 <h1 class="title">Playground</h1>
-                <div class="subtitle">Editor + terminal output (prototype)</div>
+                <div class="subtitle">JavaScript runs locally. C++ runs through the backend API.</div>
             </div>
             <div class="headerRight">
                 <label class="selectLabel">
                     <span class="selectText">Language</span>
                     <select v-model="languageId" class="select">
                         <option value="javascript">JavaScript</option>
-                        <option value="cpp">C++ (later)</option>
+                        <option value="cpp">C++</option>
                         <option value="python">Python (later)</option>
                     </select>
                 </label>
