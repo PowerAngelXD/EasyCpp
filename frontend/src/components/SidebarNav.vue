@@ -1,5 +1,7 @@
 <script setup>
     import { RouterLink } from 'vue-router'
+
+    import AuthPanel from './AuthPanel.vue'
 </script>
 
 <template>
@@ -29,6 +31,7 @@
 
         <div class="sidebarFooter">
             <div class="footerHint">GitHub-like, clean UI</div>
+            <AuthPanel />
         </div>
     </aside>
 </template>
@@ -129,5 +132,8 @@
         padding: 10px 10px 2px;
         color: var(--mutedTextColor);
         font-size: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
 </style>

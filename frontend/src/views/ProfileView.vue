@@ -1,4 +1,8 @@
 <script setup>
+    import { computed } from 'vue'
+
+    import { sessionState } from '../stores/session'
+
     const contributionWeeks = 18
     const contributionDaysPerWeek = 7
 
@@ -18,6 +22,24 @@
             }
         },
     )
+
+    const profile = computed(() => {
+        if (sessionState.user) {
+            return {
+                title: sessionState.user.username,
+                subtitle: sessionState.user.email,
+                bio: sessionState.user.bio || 'No bio provided yet.',
+                hint: 'Live profile data loaded from the backend.',
+            }
+        }
+
+        return {
+            title: 'Guest',
+            subtitle: 'Sign in from the sidebar',
+            bio: 'This page switches to backend user data after login. Activity heatmap remains a UI prototype for now.',
+            hint: 'Authentication-driven profile state',
+        }
+    })
 </script>
 
 <template>
@@ -25,19 +47,16 @@
         <section class="profileHeader">
             <div class="avatar" aria-hidden="true"></div>
             <div class="profileText">
-                <h1 class="title">Z</h1>
-                <div class="subtitle">@z</div>
-                <div class="bio">
-                    Learning notes, posts, and code snippets. This is a prototype profile page
-                    inspired by GitHub.
-                </div>
+                <h1 class="title">{{ profile.title }}</h1>
+                <div class="subtitle">{{ profile.subtitle }}</div>
+                <div class="bio">{{ profile.bio }}</div>
             </div>
         </section>
 
         <section class="card activityCard">
             <div class="cardHeader">
                 <h2 class="cardTitle">Activity</h2>
-                <div class="cardHint">Contribution heatmap prototype</div>
+                <div class="cardHint">Heatmap is still a frontend prototype.</div>
             </div>
 
             <div class="heatmap" role="img" aria-label="Contribution heatmap">
@@ -52,13 +71,17 @@
 
         <section class="card">
             <div class="cardHeader">
-                <h2 class="cardTitle">About</h2>
-                <div class="cardHint">Personal description section</div>
+                <h2 class="cardTitle">Backend Status</h2>
+                <div class="cardHint">{{ profile.hint }}</div>
             </div>
             <div class="about">
                 <p>
-                    This section can contain learning goals, preferred topics, and quick links.
-                    Later we can add tabs for posts, notes, likes, and favorites.
+                    Current session id:
+                    <strong>{{ sessionState.sessionId || 'No active session' }}</strong>
+                </p>
+                <p>
+                    Current auth mode:
+                    <strong>{{ sessionState.accessToken ? 'Authenticated' : 'Guest' }}</strong>
                 </p>
             </div>
         </section>
@@ -187,10 +210,21 @@
         background: var(--heatmap3);
     }
 
+    .about {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
     .about p {
         margin: 0;
         font-size: 13px;
         line-height: 1.6;
         color: var(--mutedTextColor);
+    }
+
+    .about strong {
+        color: var(--textColor);
+        font-weight: 650;
     }
 </style>

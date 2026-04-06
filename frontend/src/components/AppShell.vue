@@ -1,8 +1,24 @@
 <script setup>
+    import { computed, onMounted } from 'vue'
     import { RouterView } from 'vue-router'
 
     import SidebarNav from './SidebarNav.vue'
     import ThemeToggle from './ThemeToggle.vue'
+    import { hydrateCurrentUser, sessionState } from '../stores/session'
+
+    const authSummary = computed(() => {
+        if (sessionState.user?.username) {
+            return sessionState.user.username
+        }
+        if (sessionState.email) {
+            return sessionState.email
+        }
+        return 'Guest mode'
+    })
+
+    onMounted(() => {
+        hydrateCurrentUser()
+    })
 </script>
 
 <template>
@@ -12,9 +28,10 @@
             <header class="topBar">
                 <div class="topBarLeft">
                     <div class="topBarTitle">Online Learning</div>
-                    <div class="topBarSubtitle">Prototype UI</div>
+                    <div class="topBarSubtitle">Connected frontend workspace</div>
                 </div>
                 <div class="topBarRight">
+                    <div class="authBadge">{{ authSummary }}</div>
                     <ThemeToggle />
                 </div>
             </header>
@@ -70,6 +87,21 @@
     .topBarSubtitle {
         font-size: 12px;
         color: var(--mutedTextColor);
+    }
+
+    .topBarRight {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .authBadge {
+        font-size: 12px;
+        color: var(--mutedTextColor);
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--borderColor);
+        background: color-mix(in srgb, var(--surfaceColor) 92%, transparent);
     }
 
     .content {
